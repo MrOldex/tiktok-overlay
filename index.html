@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overlay Mr.Oldex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /*
+    Overlay TikTok LIVE - Mr.Oldex - noir & blanc
+    Format : 1080 x 1920 (vertical). Fond transparent.
+    Options d'URL :
+      ?preview=1   -> affiche un faux fond pour tester (à enlever en live)
+  */
+  :root {
+    --white: #ffffff;
+    --black: #000000;
+    --glass: rgba(0, 0, 0, 0.72);
+    --line: rgba(255, 255, 255, 0.35);
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+  body.preview {
+    background:
+      radial-gradient(circle at 50% 40%, #6b6b6b 0%, #2a2a2a 55%, #111 100%);
+  }
+
+  /* Scène 1080x1920 mise à l'échelle pour remplir la source */
+  #stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1080px;
+    height: 1920px;
+    transform-origin: center center;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    color: var(--white);
+  }
+
+  /* ---------- Cadre ---------- */
+  .frame {
+    position: absolute;
+    inset: 28px;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+  }
+  .corner {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border: 0 solid var(--white);
+  }
+  .corner.tl { top: 18px; left: 18px; border-top-width: 8px; border-left-width: 8px; }
+  .corner.tr { top: 18px; right: 18px; border-top-width: 8px; border-right-width: 8px; }
+  .corner.bl { bottom: 18px; left: 18px; border-bottom-width: 8px; border-left-width: 8px; }
+  .corner.br { bottom: 18px; right: 18px; border-bottom-width: 8px; border-right-width: 8px; }
+
+  /* ---------- Bandeau principal ---------- */
+  .plate {
+    position: absolute;
+    top: 175px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: stretch;
+    background: var(--glass);
+    border: 3px solid var(--white);
+    box-shadow: 10px 10px 0 rgba(255, 255, 255, 0.18);
+    white-space: nowrap;
+    animation: plateIn 1s cubic-bezier(.2, .9, .2, 1) both;
+  }
+  .live {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 26px;
+    background: var(--white);
+    color: var(--black);
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: 4px;
+  }
+  .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--black);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  .name {
+    position: relative;
+    padding: 10px 36px 4px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 96px;
+    line-height: 1;
+    letter-spacing: 10px;
+    overflow: hidden;
+  }
+  .name::after {
+    /* reflet qui passe sur le pseudo */
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    left: -160px;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    animation: shine 5s ease-in-out infinite 1.2s;
+  }
+  .timer {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    border-left: 3px solid var(--white);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Message tournant ---------- */
+  .msg-wrap {
+    position: absolute;
+    top: 325px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 64px;
+    min-width: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    color: var(--black);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    overflow: hidden;
+    padding: 0 40px;
+    animation: plateIn 1s cubic-bezier(.2, .9, .2, 1) .25s both;
+  }
+  .msg {
+    white-space: nowrap;
+    transition: transform .5s ease, opacity .5s ease;
+  }
+  .msg.out { transform: translateY(-70px); opacity: 0; }
+  .msg.in  { transform: translateY(70px);  opacity: 0; transition: none; }
+
+  /* ---------- Texte vertical défilant (côté droit) ---------- */
+  .rail {
+    position: absolute;
+    top: 520px;
+    right: 44px;
+    width: 46px;
+    height: 900px;
+    overflow: hidden;
+    opacity: .55;
+    -webkit-mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+            mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+  }
+  .rail-track {
+    writing-mode: vertical-rl;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 40px;
+    letter-spacing: 8px;
+    white-space: nowrap;
+    animation: rail 22s linear infinite;
+  }
+
+  /* ---------- Tag bas ---------- */
+  .tag {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    letter-spacing: 12px;
+    opacity: .6;
+    white-space: nowrap;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1);   opacity: 1; }
+    50%      { transform: scale(.6);  opacity: .35; }
+  }
+  @keyframes shine {
+    0%   { left: -160px; }
+    35%  { left: 110%; }
+    100% { left: 110%; }
+  }
+  @keyframes plateIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes rail {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="frame"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <div class="plate">
+      <div class="live"><span class="dot"></span>LIVE</div>
+      <div class="name">MR.OLDEX</div>
+      <div class="timer" id="timer">00:00:00</div>
+    </div>
+
+    <div class="msg-wrap"><div class="msg" id="msg">Bienvenue sur le live</div></div>
+
+    <div class="rail"><div class="rail-track" id="rail"></div></div>
+
+    <div class="tag">— MR.OLDEX —</div>
+  </div>
+
+<script>
+  // ====== À personnaliser ======
+  const MESSAGES = [
+    "Bienvenue sur le live",
+    "Abonne-toi ♥",
+    "Tape l'écran ❤",
+    "Partage le live",
+    "Merci pour les cadeaux"
+  ];
+  const MESSAGE_DELAY = 6000; // ms entre chaque message
+  // =============================
+
+  const params = new URLSearchParams(location.search);
+  if (params.get("preview") === "1") document.body.classList.add("preview");
+
+  // Mise à l'échelle 1080x1920 -> taille de la source
+  const stage = document.getElementById("stage");
+  function fit() {
+    const s = Math.min(innerWidth / 1080, innerHeight / 1920);
+    stage.style.transform = `translate(-50%, -50%) scale(${s})`;
+  }
+  addEventListener("resize", fit);
+  fit();
+
+  // Chrono du live (démarre quand la source est chargée)
+  const start = Date.now();
+  const timer = document.getElementById("timer");
+  const pad = n => String(n).padStart(2, "0");
+  setInterval(() => {
+    const t = Math.floor((Date.now() - start) / 1000);
+    timer.textContent = `${pad(Math.floor(t / 3600))}:${pad(Math.floor(t / 60) % 60)}:${pad(t % 60)}`;
+  }, 1000);
+
+  // Messages tournants
+  const msg = document.getElementById("msg");
+  let i = 0;
+  setInterval(() => {
+    msg.classList.add("out");
+    setTimeout(() => {
+      i = (i + 1) % MESSAGES.length;
+      msg.textContent = MESSAGES[i];
+      msg.classList.remove("out");
+      msg.classList.add("in");
+      void msg.offsetWidth;
+      msg.classList.remove("in");
+    }, 500);
+  }, MESSAGE_DELAY);
+
+  // Texte vertical (doublé pour une boucle sans coupure)
+  const chunk = "MR.OLDEX • LIVE • ".repeat(6);
+  document.getElementById("rail").textContent = chunk + chunk;
+</script>
+</body>
+</html>
