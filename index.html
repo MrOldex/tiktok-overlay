@@ -16,8 +16,9 @@
   :root {
     --white: #ffffff;
     --black: #000000;
-    --glass: rgba(0, 0, 0, 0.72);
-    --line: rgba(255, 255, 255, 0.35);
+    /* Couleurs pleines : la compression TikTok abîme les semi-transparences */
+    --glass: #000000;
+    --line: #ffffff;
   }
   html, body {
     margin: 0;
@@ -47,20 +48,19 @@
   /* ---------- Cadre ---------- */
   .frame {
     position: absolute;
-    inset: 28px;
-    border: 2px solid var(--line);
-    border-radius: 6px;
+    inset: 30px;
+    border: 4px solid var(--line);
   }
   .corner {
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     border: 0 solid var(--white);
   }
-  .corner.tl { top: 18px; left: 18px; border-top-width: 8px; border-left-width: 8px; }
-  .corner.tr { top: 18px; right: 18px; border-top-width: 8px; border-right-width: 8px; }
-  .corner.bl { bottom: 18px; left: 18px; border-bottom-width: 8px; border-left-width: 8px; }
-  .corner.br { bottom: 18px; right: 18px; border-bottom-width: 8px; border-right-width: 8px; }
+  .corner.tl { top: 16px; left: 16px; border-top-width: 14px; border-left-width: 14px; }
+  .corner.tr { top: 16px; right: 16px; border-top-width: 14px; border-right-width: 14px; }
+  .corner.bl { bottom: 16px; left: 16px; border-bottom-width: 14px; border-left-width: 14px; }
+  .corner.br { bottom: 16px; right: 16px; border-bottom-width: 14px; border-right-width: 14px; }
 
   /* ---------- Bandeau principal ---------- */
   .plate {
@@ -71,8 +71,7 @@
     display: flex;
     align-items: stretch;
     background: var(--glass);
-    border: 3px solid var(--white);
-    box-shadow: 10px 10px 0 rgba(255, 255, 255, 0.18);
+    border: 5px solid var(--white);
     white-space: nowrap;
     animation: plateIn 1s cubic-bezier(.2, .9, .2, 1) both;
   }
@@ -84,12 +83,12 @@
     background: var(--white);
     color: var(--black);
     font-weight: 700;
-    font-size: 34px;
+    font-size: 40px;
     letter-spacing: 4px;
   }
   .dot {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--black);
     animation: pulse 1.4s ease-in-out infinite;
@@ -101,26 +100,14 @@
     font-size: 96px;
     line-height: 1;
     letter-spacing: 10px;
-    overflow: hidden;
-  }
-  .name::after {
-    /* reflet qui passe sur le pseudo */
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 120px;
-    left: -160px;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-    animation: shine 5s ease-in-out infinite 1.2s;
   }
   .timer {
     display: flex;
     align-items: center;
     padding: 0 24px;
-    border-left: 3px solid var(--white);
-    font-weight: 500;
-    font-size: 30px;
+    border-left: 5px solid var(--white);
+    font-weight: 700;
+    font-size: 36px;
     letter-spacing: 2px;
     font-variant-numeric: tabular-nums;
   }
@@ -128,18 +115,18 @@
   /* ---------- Message tournant ---------- */
   .msg-wrap {
     position: absolute;
-    top: 325px;
+    top: 335px;
     left: 50%;
     transform: translateX(-50%);
-    height: 64px;
-    min-width: 520px;
+    height: 76px;
+    min-width: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--white);
     color: var(--black);
     font-weight: 700;
-    font-size: 30px;
+    font-size: 36px;
     letter-spacing: 5px;
     text-transform: uppercase;
     overflow: hidden;
@@ -157,43 +144,39 @@
   .rail {
     position: absolute;
     top: 520px;
-    right: 44px;
-    width: 46px;
+    right: 50px;
+    width: 58px;
     height: 900px;
     overflow: hidden;
-    opacity: .55;
-    -webkit-mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
-            mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+    border-top: 4px solid var(--white);
+    border-bottom: 4px solid var(--white);
   }
   .rail-track {
     writing-mode: vertical-rl;
     font-family: "Bebas Neue", Impact, sans-serif;
-    font-size: 40px;
+    font-size: 52px;
     letter-spacing: 8px;
     white-space: nowrap;
-    animation: rail 22s linear infinite;
+    animation: rail 30s linear infinite;
   }
 
   /* ---------- Tag bas ---------- */
   .tag {
     position: absolute;
-    bottom: 60px;
+    bottom: 58px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 22px;
-    letter-spacing: 12px;
-    opacity: .6;
+    padding: 6px 22px;
+    background: var(--black);
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 10px;
     white-space: nowrap;
   }
 
   @keyframes pulse {
     0%, 100% { transform: scale(1);   opacity: 1; }
     50%      { transform: scale(.6);  opacity: .35; }
-  }
-  @keyframes shine {
-    0%   { left: -160px; }
-    35%  { left: 110%; }
-    100% { left: 110%; }
   }
   @keyframes plateIn {
     from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
